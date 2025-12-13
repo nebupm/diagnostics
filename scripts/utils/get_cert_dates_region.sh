@@ -21,7 +21,7 @@ function initialise(){
     source ${DIAGNOSTICS_DIR}/scripts/lib/common_utils_functions.sh
     source ${DIAGNOSTICS_DIR}/scripts/lib/html_generator.sh
     # shellcheck disable=SC2034
-    EMAILIDS="nebu.mathews@oracle.com"
+    EMAILIDS="..."
 }
 
 function parse_output_data(){
