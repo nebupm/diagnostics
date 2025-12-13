@@ -32,11 +32,8 @@ function parse_output_data(){
 
     #Output Format
     #RegionName,NodeName,Plugin,Command,RESULT1,RESULT2,RESULT3,RESULT4,RESULT5,RESULT6
-    #lin,hub1,system,get_host_cert_dates.sh,lin1-vbstudio-prod-hub-3,,,/etc/pki/ca-trust/source/anchors/transitional-missioncontrol-root-ca.crt,22/Aug/2016,20/Aug/2026
-    #lin,hub1,system,get_host_cert_dates.sh,lin1-vbstudio-prod-hub-3,,,/etc/pki/ca-trust/source/anchors/missioncontrol-root-ca.crt,22/Aug/2016,20/Aug/2026
-    #lin,hub1,system,get_host_cert_dates.sh,lin1-vbstudio-prod-hub-3,,,/etc/pki/ca-trust/source/anchors/pki-eu-milan-1-ad1-root-ca-active.crt,3/Jun/2021,2/Jun/2026
-    #lin,hub1,system,get_host_cert_dates.sh,lin1-vbstudio-prod-hub-3,,,/etc/pki/ca-trust/source/anchors/oraclecorp.crt,13/Jun/2014,12/Jun/2044
-    #lin,hub1,system,get_host_cert_dates.sh,lin1-vbstudio-prod-hub-3,,,/etc/pki/ca-trust/source/anchors/pki-eu-milan-1-ad1-root-ca.crt,3/Jun/2021,2/Jun/2026
+    #reg,node1,system,get_host_cert_dates.sh,reg1-prod-node-3,,,/etc/pki/ca-trust/source/anchors/transitional-missioncontrol-root-ca.crt,22/Aug/2016,20/Aug/2026
+    #reg,node1,system,get_host_cert_dates.sh,reg1-prod-node-3,,,/etc/pki/ca-trust/source/anchors/missioncontrol-root-ca.crt,22/Aug/2016,20/Aug/2026
     for this_file in ${LOG_DIR}/${THIS_UNIQ_ID}_${INPUT_SCRIPT%.sh}.*; do
         grep -v -e "NA,NA,NA" -e "FAILED" -e ",$"  $this_file | awk -F "," '{ if ($2 == "NodeName") { printf("%s,%s,%s,%s,Cert_type,RPM_Version,FileName,Valid_From,Valid_Until\n",$1,$2,$3,$4) } else {printf("%s,%s,%s,%s,%s,%s,%s,%s,%s\n",$1,$5,$3,$4,$6,$7,$8,$9,$NF)}}'
         rm -f $this_file
@@ -54,12 +51,12 @@ function parse_output_data(){
 function printusage(){
     echo "Usage:"
     echo "Example: "
-    echo "  $SCRIPTNAME ltn"
-    echo "  $SCRIPTNAME ltn psm"
-    echo "  $SCRIPTNAME ltn all"
-    echo "  $SCRIPTNAME ltn,brs,fra"
-    echo "  $SCRIPTNAME ltn,brs,fra psm"
-    echo "  $SCRIPTNAME ltn,brs,fra all"
+    echo "  $SCRIPTNAME reg1"
+    echo "  $SCRIPTNAME reg1 legacy"
+    echo "  $SCRIPTNAME reg1 all"
+    echo "  $SCRIPTNAME reg1,reg2,reg3"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 legacy"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 all"
     exit 1
 }
 
@@ -72,8 +69,8 @@ if [[ $# -eq 0 ]]; then
 fi
 regions=$1
 case "${2,,}" in
-    all) nodes="--node=primarypod,psmpod";;
-    psm) nodes="--node=psmpod";;
+    all) nodes="--node=primarypod,legacypod";;
+    legacy) nodes="--node=legacypod";;
     *) nodes="--node=primarypod";;
 esac
 shift;shift

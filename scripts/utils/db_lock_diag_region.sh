@@ -19,7 +19,7 @@ function initialise(){
     source ${DIAGNOSTICS_DIR}/scripts/lib/common_utils_functions.sh
     source ${DIAGNOSTICS_DIR}/scripts/lib/html_generator.sh
     # shellcheck disable=SC2034
-    EMAILIDS="nebu.mathews@oracle.com"
+    EMAILIDS="..."
 }
 
 function parse_output_data(){
@@ -30,10 +30,10 @@ function parse_output_data(){
 
     #Output Format
     #RegionName,NodeName,Plugin,Command,RESULT1,RESULT2
-    #lin,hub1,devcs,check_db_lock.sh,lin1-vbstudio-prod-hub-3,OK:Present(dbck.lock)
-    #lin,hub2,devcs,check_db_lock.sh,lin1-vbstudio-prod-hub-4,NOK:NOT_Present(dbck.lock)
-    #lin,psmhub1,devcs,check_db_lock.sh,lin1-vbstudio-prod-psm-hub-3,OK:Present(dbck.lock)
-    #lin,psmhub2,devcs,check_db_lock.sh,lin1-vbstudio-prod-psm-hub-4,NOK:NOT_Present(dbck.lock)
+    #reg1,node1,devcs,check_db_lock.sh,reg1-prod-node-3,OK:Present(dbck.lock)
+    #reg1,node2,devcs,check_db_lock.sh,reg1-prod-node-4,NOK:NOT_Present(dbck.lock)
+    #reg1,legacynode1,devcs,check_db_lock.sh,reg1-prod-legacy-node-3,OK:Present(dbck.lock)
+    #reg1,legacynode2,devcs,check_db_lock.sh,reg1-prod-legacy-node-4,NOK:NOT_Present(dbck.lock)
     for this_file in ${LOG_DIR}/${THIS_UNIQ_ID}_${INPUT_SCRIPT%.sh}.*; do
         grep -v -e "NA$" -e "FAILED" -e ",$"  $this_file | awk -F "," '{ if ($2 == "NodeName") { printf("%s,%s,%s,%s,Status\n",$1,$2,$3,$4) } else {printf("%s,%s,%s,%s,%s\n",$1,$5,$3,$4,$NF)}}'
         rm -f $this_file
@@ -51,12 +51,12 @@ function parse_output_data(){
 function printusage(){
     echo "Usage:"
     echo "Example: "
-    echo "  $SCRIPTNAME ltn"
-    echo "  $SCRIPTNAME ltn psm"
-    echo "  $SCRIPTNAME ltn all"
-    echo "  $SCRIPTNAME ltn,brs,fra"
-    echo "  $SCRIPTNAME ltn,brs,fra psm"
-    echo "  $SCRIPTNAME ltn,brs,fra all"
+    echo "  $SCRIPTNAME reg1"
+    echo "  $SCRIPTNAME reg1 legacy"
+    echo "  $SCRIPTNAME reg1 all"
+    echo "  $SCRIPTNAME reg1,reg2,reg3"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 legacy"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 all"
     exit 1
 }
 #########################################################################################
@@ -69,9 +69,9 @@ fi
 
 regions=$1
 case "${2,,}" in
-    all) nodes="--node=hub1,psmhub1";;
-    psm) nodes="--node=psmhub1";;
-    *) nodes="--node=hub1";;
+    all) nodes="--node=node1,legacynode1";;
+    legacy) nodes="--node=legacynode1";;
+    *) nodes="--node=node1";;
 esac
 shift;shift
 run_command_on_regions $regions $nodes $@

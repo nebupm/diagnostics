@@ -21,7 +21,7 @@ function initialise(){
     source ${DIAGNOSTICS_DIR}/scripts/lib/common_utils_functions.sh
     source ${DIAGNOSTICS_DIR}/scripts/lib/html_generator.sh
     # shellcheck disable=SC2034
-    EMAILIDS="nebu.mathews@oracle.com"
+    EMAILIDS="..."
 }
 
 function parse_output_data(){
@@ -32,10 +32,9 @@ function parse_output_data(){
 
     #Output Format
     #RegionName,NodeName,Plugin,Command,RESULT1,RESULT2,RESULT3,RESULT4,RESULT5
-    #kix,hub1,devcs,get_org_count.sh,kix1-vbstudio-prod-hub-5,Native,6,2,4
-    #sin,hub1,devcs,get_org_count.sh,sin1-vbstudio-prod-hub-3,Native,80,37,43
-    #syd,hub1,devcs,get_org_count.sh,syd1-vbstudio-prod-hub-3,Native,167,87,80
-    #xsp,hub1,devcs,get_org_count.sh,xsp1-vbstudio-prod-5-hub-3,Built-On,2,0,2
+    #reg1,node1,devcs,get_org_count.sh,reg1-prod-node-5,Native,6,2,4
+    #reg2,node1,devcs,get_org_count.sh,reg2-prod-node-3,Native,80,37,43
+    #reg3,node1,devcs,get_org_count.sh,reg3-prod-node-3,Native,167,87,80
     for this_file in ${LOG_DIR}/${THIS_UNIQ_ID}_${INPUT_SCRIPT%.sh}.*; do
         grep -v -e "NA$" -e "FAILED" -e ",$"  $this_file | awk -F "," '{ if ($2 == "NodeName") { printf("%s,%s,%s,%s,Pod_Type,Org_Count,Shell_Enabled,Shell_Not_Enabled\n",$1,$2,$3,$4) } else {printf("%s,%s,%s,%s,%s,%s,%s,%s\n",$1,$5,$3,$4,$6,$7,$8,$9)}}'
         rm -f $this_file
@@ -53,12 +52,12 @@ function parse_output_data(){
 function printusage(){
     echo "Usage:"
     echo "Example: "
-    echo "  $SCRIPTNAME ltn"
-    echo "  $SCRIPTNAME ltn psm"
-    echo "  $SCRIPTNAME ltn all"
-    echo "  $SCRIPTNAME ltn,brs,fra"
-    echo "  $SCRIPTNAME ltn,brs,fra psm"
-    echo "  $SCRIPTNAME ltn,brs,fra all"
+    echo "  $SCRIPTNAME reg1"
+    echo "  $SCRIPTNAME reg1 legacy"
+    echo "  $SCRIPTNAME reg1 all"
+    echo "  $SCRIPTNAME reg1,reg2,reg3"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 legacy"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 all"
     exit 1
 }
 
@@ -71,9 +70,9 @@ if [[ $# -eq 0 ]]; then
 fi
 regions=$1
 case "${2,,}" in
-    all) nodes="--node=hub1,psmhub1";;
-    psm) nodes="--node=psmhub1";;
-    *) nodes="--node=hub1";;
+    all) nodes="--node=node1,legacynode1";;
+    legacy) nodes="--node=legacynode1";;
+    *) nodes="--node=node1";;
 esac
 shift;shift
 run_command_on_regions $regions $nodes "--args=yes" $@

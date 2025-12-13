@@ -21,7 +21,7 @@ function initialise(){
     source ${DIAGNOSTICS_DIR}/scripts/lib/common_utils_functions.sh
     source ${DIAGNOSTICS_DIR}/scripts/lib/html_generator.sh
     # shellcheck disable=SC2034
-    EMAILIDS="nebu.mathews@oracle.com"
+    EMAILIDS="..."
 }
 
 function parse_output_data(){
@@ -31,8 +31,8 @@ function parse_output_data(){
     temp_csv_file=$(mktemp).csv
     #Output Format
     # RegionName,NodeName,Plugin,Command,Result
-    # ltn,hub1,system,hprof_count.sh,ltn1-vbstudio-prod-hub-1,JFR_Logs=2,GC_Logs=4
-    # ltn,hub2,system,hprof_count.sh,ltn1-vbstudio-prod-hub-2,JFR_Logs=2,GC_Logs=5
+    # reg1,node1,system,hprof_count.sh,reg1-prod-node1-1,JFR_Logs=2,GC_Logs=4
+    # reg1,node2,system,hprof_count.sh,reg1-prod-node1-2,JFR_Logs=2,GC_Logs=5
     for this_file in ${LOG_DIR}/${THIS_UNIQ_ID}_${INPUT_SCRIPT%.sh}.*; do
         grep -v -e "NA,NA,NA" -e "FAILED" -e ",$"  $this_file | awk -F "," '{ if ($2 == "NodeName") { printf("%s,%s,%s,%s,JFR_Logs,GC_Logs\n",$1,$2,$3,$4) } else {split($6,jfr,"=");split($7,gc,"=");printf("%s,%s,%s,%s,%s,%s\n",$1,$5,$3,$4,jfr[2],gc[2])}}'
         rm -f $this_file
@@ -50,9 +50,9 @@ function parse_output_data(){
 function printusage(){
     echo "Usage:"
     echo "Example: "
-    echo "  $SCRIPTNAME ltn"
-    echo "  $SCRIPTNAME ltn psm"
-    echo "  $SCRIPTNAME ltn,brs,fra all"
+    echo "  $SCRIPTNAME reg1"
+    echo "  $SCRIPTNAME reg1 legacy"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 all"
     exit 1
 }
 
@@ -65,9 +65,9 @@ if [[ $# -eq 0 ]]; then
 fi
 regions=$1
 case "${2,,}" in
-    all) nodes="--node=hub,psmhub";;
-    psm) nodes="--node=psmhub";;
-    *) nodes="--node=hub";;
+    all) nodes="--node=node1,legacynode1";;
+    legacy) nodes="--node=legacynode1";;
+    *) nodes="--node=node1";;
 esac
 shift;shift
 

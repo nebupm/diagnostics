@@ -22,7 +22,7 @@ function initialise(){
     source ${DIAGNOSTICS_DIR}/scripts/lib/common_utils_functions.sh
     source ${DIAGNOSTICS_DIR}/scripts/lib/html_generator.sh
     # shellcheck disable=SC2034
-    EMAILIDS="nebu.mathews@oracle.com"
+    EMAILIDS="..."
 }
 
 function parse_output_data(){
@@ -46,12 +46,12 @@ function parse_output_data(){
 function printusage(){
     echo "Usage:"
     echo "Example: "
-    echo "  $SCRIPTNAME ltn"
-    echo "  $SCRIPTNAME ltn psm"
-    echo "  $SCRIPTNAME ltn all"
-    echo "  $SCRIPTNAME ltn,brs,fra"
-    echo "  $SCRIPTNAME ltn,brs,fra psm"
-    echo "  $SCRIPTNAME ltn,brs,fra all"
+    echo "  $SCRIPTNAME reg1"
+    echo "  $SCRIPTNAME reg1 legacy"
+    echo "  $SCRIPTNAME reg1 all"
+    echo "  $SCRIPTNAME reg1,reg2,reg3"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 legacy"
+    echo "  $SCRIPTNAME reg1,reg2,reg3 all"
     exit 1
 }
 
@@ -64,9 +64,9 @@ if [[ $# -eq 0 ]]; then
 fi
 regions=$1
 case "${2,,}" in
-    all) nodes="--node=controlplane,wtss,psmwtss";;
-    psm) nodes="--node=controlplane,psmwtss";;
-    *) nodes="--node=controlplane,wtss";;
+    all) nodes="--node=controlplane,webserver,legacywebserver";;
+    legacy) nodes="--node=controlplane,legacywebserver";;
+    *) nodes="--node=controlplane,webserver";;
 esac
 shift;shift
 run_command_on_regions $regions $nodes $@
