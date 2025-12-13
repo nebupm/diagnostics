@@ -1,0 +1,46 @@
+{
+  "North America" :
+  [
+    {
+      "realm" : "commercial",
+      "name" : "hollywood",
+      "identifier" : "Holllywood Studios",
+      "geography" : "na",
+      "key" : "holly"
+    }
+  ],
+  "EMEA" :
+  [
+    {
+      "realm" : "commercial",
+      "name" : "westminister",
+      "identifier" : "Westminister",
+      "geography" : "emea",
+      "key" : "lon"
+    },
+    {
+      "realm" : "gov",
+      "name" : "Yorkshire",
+      "identifier" : "Yorkshire Dales",
+      "geography" : "emea",
+      "key" : "york"
+    }
+  ],
+  "APAC" :
+  [
+    {
+      "realm" : "commercial",
+      "name" : "Samurai",
+      "identifier" : "Tokyo Central",
+      "geography" : "apac",
+      "key" : "sam"
+    },
+    {
+      "realm" : "commercial",
+      "name" : "Kiwiland",
+      "identifier" : "New Zealand",
+      "geography" : "apac",
+      "key" : "kiwi"
+    }
+  ]
+}
