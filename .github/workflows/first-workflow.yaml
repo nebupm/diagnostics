@@ -1,0 +1,23 @@
+name: My First Workflow
+
+# Trigger: When to run (e.g., on every push to the main branch)
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # Job ID (unique identifier)
+  my-job:
+    # Environment: Where to run (e.g., Ubuntu, Windows, macOS)
+    runs-on: ubuntu-latest
+    
+    # Steps: Sequential tasks to execute
+    steps:
+      # Step 1: Clone the repository code onto the runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # Step 2: Run a shell command
+      - name: Run a script
+        run: echo "Hello, world! The job is running on 2025-12-19."
+
